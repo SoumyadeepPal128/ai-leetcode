@@ -1,7 +1,11 @@
+import dotenv from "dotenv";
 import express from "express";
+import connectDB from "./db/index.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
-import executeRouter from "./routes/execute.routes.js";
 
+dotenv.config({
+  path: "./.env",
+});
 const app = express();
 
 app.use(express.json());
@@ -10,12 +14,21 @@ app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
 
-app.use("/api/execute", executeRouter);
-
 // MUST be last
 app.use(errorHandler);
 
-const PORT = 4000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 4000;
+
+// Only start listening for requests AFTER the DB connection succeeds.
+// This avoids a race condition where a request comes in before Mongo
+// is ready.
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to DB, server not started:", err);
+    process.exit(1);
+  });
