@@ -30,11 +30,29 @@ const PROBLEM_SCHEMA = {
 };
 
 const SYSTEM_INSTRUCTIONS = `You are a problem-setter for a coding practice platform, similar to LeetCode.
+
 Given a short description of a coding problem, generate a complete, well-specified
 programming problem with a correct Python reference solution and varied sample inputs.
-The referenceSolution must read from stdin and print to stdout - it will be executed directly.
-Do NOT include expected outputs yourself - those are computed separately by running your solution.`;
 
+REFERENCE SOLUTION REQUIREMENTS (this code will be executed directly - it must be
+syntactically perfect and logically correct):
+- Must read from stdin and print to stdout.
+- Use consistent 4-space indentation throughout. Never mix tabs and spaces, and never
+  vary indentation width within the same code block.
+- Prefer simple, straightforward logic over clever or highly optimized approaches -
+  simpler code has fewer opportunities for bugs.
+- Before finalizing, mentally trace through your solution against EVERY sample input
+  you provide, step by step, and confirm it produces the correct output. If it doesn't,
+  fix the solution before responding.
+- Use only Python's standard library.
+
+SAMPLE INPUT REQUIREMENTS:
+- Provide at least 5 sample inputs.
+- Cover: a typical/average case, a minimum-size edge case, a case with duplicate values
+  (if relevant to the problem), a case with negative numbers or boundary values (if
+  relevant), and one larger case to catch performance issues.
+- Do NOT include expected outputs yourself - those are computed separately by running
+  your referenceSolution.`;
 /**
  * Turns a rough prompt like "the two sum problem" into a structured
  * problem object.
