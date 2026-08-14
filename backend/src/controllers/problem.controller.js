@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 const getProblemById=asyncHandler(async (req,res)=>{
     const {problemId}=req.params;
-    const problem=Problem.findById(projectId);
+    const problem=Problem.findById(problemId);
     if(!problem){
         throw new ApiError(404,"Problem not found");
     }
@@ -14,13 +14,13 @@ const getProblemById=asyncHandler(async (req,res)=>{
 })
 
 const createProblem=asyncHandler(async (req,res)=>{
-    const {title,descirption,prompt,referenceSolution,testCases}=req.body;
+    const {title,description,prompt,referenceSolution,testCases}=req.body;
 
     const problem=await Problem.create({
         title,
         description,
         prompt,
-        referenceSoltuion,
+        referenceSolution,
         testCases,
         createdBy: new mongoose.Types.ObjectId(req.user._id),
     });
@@ -29,12 +29,17 @@ const createProblem=asyncHandler(async (req,res)=>{
 })
 
 const deleteProblem=asyncHandler(async (req,res)=>{
-    const problemId=req.params;
+    const {problemId}=req.params;
 
-    const problem=Problem.findByIdAndDelete(problemId);
+    const problem=await Problem.findByIdAndDelete(problemId);
     if(!problem){
-        throw ApiError(201,"Problem not found");
+        throw new ApiError(201,"Problem not found");
     }
     return res.status(200).json(new ApiResponse(200,problem,"Problem deleted successfully"));
 })
 
+export {
+    getProblemById,
+    createProblem,
+    deleteProblem,
+}
