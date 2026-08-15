@@ -17,7 +17,7 @@ const PROBLEM_SCHEMA = {
     referenceSolution: {
       type: "string",
       description:
-        "A complete, runnable Python script that reads input from stdin and prints output to stdout, solving the problem",
+        "A complete, runnable C++ script that reads input from stdin and prints output to stdout, solving the problem",
     },
     sampleInputs: {
       type: "array",
@@ -32,7 +32,7 @@ const PROBLEM_SCHEMA = {
 const SYSTEM_INSTRUCTIONS = `You are a problem-setter for a coding practice platform, similar to LeetCode.
 
 Given a short description of a coding problem, generate a complete, well-specified
-programming problem with a correct Python reference solution and varied sample inputs.
+programming problem with a correct C++ reference solution and varied sample inputs.
 
 REFERENCE SOLUTION REQUIREMENTS (this code will be executed directly - it must be
 syntactically perfect and logically correct):
@@ -44,7 +44,7 @@ syntactically perfect and logically correct):
 - Before finalizing, mentally trace through your solution against EVERY sample input
   you provide, step by step, and confirm it produces the correct output. If it doesn't,
   fix the solution before responding.
-- Use only Python's standard library.
+- Use only C++'s standard library.
 
 SAMPLE INPUT REQUIREMENTS:
 - Provide at least 5 sample inputs.
