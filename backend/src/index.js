@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./db/index.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import executeRouter from "./routes/execute.routes.js";
+import generateRouter from "./routes/generate.routes.js";
 
 dotenv.config({
   path: "./.env",
@@ -14,14 +16,14 @@ app.get("/health", (req, res) => {
   res.json({ ok: true });
 });
 
+app.use("/api/execute", executeRouter);
+app.use("/api/generate", generateRouter);
+
 // MUST be last
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
-// Only start listening for requests AFTER the DB connection succeeds.
-// This avoids a race condition where a request comes in before Mongo
-// is ready.
 connectDB()
   .then(() => {
     app.listen(PORT, () => {
