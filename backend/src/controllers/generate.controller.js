@@ -19,21 +19,24 @@ const generateProblem = asyncHandler(async (req, res) => {
   // and use the real output as the verified expected output.
   const testCases = [];
   for (const input of generated.sampleInputs) {
-    const { stdout, stderr, timedOut } = await runCode(
-      "cpp",
-      generated.referenceSolution,
-      input
-    );
+  let result = await runCode("cpp", generated.referenceSolution, input);
 
-    if (timedOut || stderr) {
-      // Reference solution failed to compile or run on this input -
-      // skip it rather than saving a broken test case.
-      console.warn(`Reference solution failed on input "${input}":`, stderr);
-      continue;
-    }
-
-    testCases.push({ input, expectedOutput: stdout });
+  // Retry once on timeout - could be transient resource contention,
+  // not necessarily a real problem with the code.
+  if (result.timedOut) {
+    console.warn(`Timed out on input "${input}", retrying once...`);
+    result = await runCode("cpp", generated.referenceSolution, input);
   }
+
+  const { stdout, stderr, timedOut } = result;
+
+  if (timedOut || stderr) {
+    console.warn(`Reference solution failed on input "${input}":`, stderr || "(timed out twice)");
+    continue;
+  }
+
+  testCases.push({ input, expectedOutput: stdout });
+}
 
   if (testCases.length === 0) {
     throw new ApiError(

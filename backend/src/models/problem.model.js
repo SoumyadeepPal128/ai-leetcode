@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import {Testcase} from "./testcase.model.js"
+import testCaseSchema from "./testcase.model.js"
 
 const problemSchema = new Schema(
   {
@@ -21,7 +21,7 @@ const problemSchema = new Schema(
       required: true,
     },
     testCases: {
-      type: [Testcase],
+      type: [testCaseSchema],
       required: true,
       validate: {
         validator: (arr) => arr.length > 0,

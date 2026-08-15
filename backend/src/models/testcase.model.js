@@ -1,5 +1,4 @@
-import mongoose, { Schema } from "mongoose";
-
+import { Schema } from "mongoose";
 
 const testCaseSchema = new Schema(
   {
@@ -15,4 +14,4 @@ const testCaseSchema = new Schema(
   { _id: false } // don't generate a separate _id for each test case sub-document
 );
 
-export const Testcase = mongoose.model("Testcase",testCaseSchema);
+export default testCaseSchema;

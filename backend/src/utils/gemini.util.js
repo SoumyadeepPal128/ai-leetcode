@@ -1,7 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 // Reads GEMINI_API_KEY from process.env automatically.
-const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // This describes the EXACT shape we want the JSON response to have.
 // Gemini's structured output feature guarantees the response matches

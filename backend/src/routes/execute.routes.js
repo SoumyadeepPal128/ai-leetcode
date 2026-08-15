@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { executeCodeValidator } from "../validators/index.js";
 import { validate } from "../middlewares/validator.middleware.js";
-import { executeCode } from "../controllers/execute.controllers.js";
+import { executeCode } from "../controllers/execute.controller.js";
 
 const router = Router();
 
