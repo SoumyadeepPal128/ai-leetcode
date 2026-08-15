@@ -22,7 +22,7 @@ const createProblem=asyncHandler(async (req,res)=>{
         prompt,
         referenceSolution,
         testCases,
-        createdBy: new mongoose.Types.ObjectId(req.user._id),
+        //createdBy: new mongoose.Types.ObjectId(req.user._id),
     });
 
     return res.status(201).json(new ApiResponse(201,problem,"Problem created successfully"));
