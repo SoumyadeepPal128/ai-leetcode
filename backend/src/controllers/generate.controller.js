@@ -18,6 +18,7 @@ const generateProblem = asyncHandler(async (req, res) => {
   // execute, for C++) the reference solution against each sample input,
   // and use the real output as the verified expected output.
   const testCases = [];
+  
   for (const input of generated.sampleInputs) {
   let result = await runCode("cpp", generated.referenceSolution, input);
 
