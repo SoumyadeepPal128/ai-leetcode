@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 const getProblemById=asyncHandler(async (req,res)=>{
     const {problemId}=req.params;
-    const problem=Problem.findById(problemId);
+    const problem=await Problem.findById(problemId);
     if(!problem){
         throw new ApiError(404,"Problem not found");
     }
