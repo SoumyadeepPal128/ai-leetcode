@@ -15,7 +15,7 @@ const executeCode = asyncHandler(async (req, res) => {
   }
 
   const testCases=problem.testCases;
-  const {allPassed,results}=await runAgainstTestCases("cpp",code,testCases);
+  const {allPassed,results}=await runAgainstTestCases(language,code,testCases);
   let verdict="Accepted - All Testcases Passed";
   if(!allPassed){
     verdict=`${results.length} testcase(s) attempted, failed on test ${results.length}`;

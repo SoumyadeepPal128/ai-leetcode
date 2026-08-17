@@ -1,1 +1,1 @@
-export const SUPPORTED_LANGUAGES = ["python", "javascript","c++"];
+export const SUPPORTED_LANGUAGES = ["python", "javascript","cpp"];

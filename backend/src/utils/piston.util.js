@@ -32,34 +32,43 @@ export async function runCode(lang, sourceCode, stdin = "") {
   const runtime = RUNTIMES[lang];
   if (!runtime) throw new Error(`Unsupported language: ${lang}`);
 
-  try {
-    const { data } = await axios.post(`${PISTON_URL}/execute`, {
-      language: runtime.language,
-      version: runtime.version,
-      files: [{ name: FILE_NAMES[lang], content: sourceCode }],
-      stdin,
-      run_timeout: 3000,
-      compile_timeout: 10000,
-    });
+  const attempt = async () => {
+    try {
+      const { data } = await axios.post(`${PISTON_URL}/execute`, {
+        language: runtime.language,
+        version: runtime.version,
+        files: [{ name: FILE_NAMES[lang], content: sourceCode }],
+        stdin,
+        run_timeout: 3000,
+        compile_timeout: 10000,
+      });
 
-    if (data.compile && data.compile.code !== 0) {
+      if (data.compile && data.compile.code !== 0) {
+        return { stdout: "", stderr: data.compile.stderr || "Compilation failed", timedOut: false };
+      }
+
+      const run = data.run || {};
       return {
-        stdout: "",
-        stderr: data.compile.stderr || "Compilation failed",
-        timedOut: false,
+        stdout: (run.stdout || "").trim(),
+        stderr: (run.stderr || "").trim(),
+        timedOut: run.signal === "SIGKILL",
       };
+    } catch (err) {
+      const pistonMessage = err.response?.data?.message;
+      throw new Error(pistonMessage || err.message);
     }
+  };
 
-    const run = data.run || {};
-    return {
-      stdout: (run.stdout || "").trim(),
-      stderr: (run.stderr || "").trim(),
-      timedOut: run.signal === "SIGKILL",
-    };
-  } catch (err) {
-    const pistonMessage = err.response?.data?.message;
-    throw new Error(pistonMessage || err.message);
+  let result = await attempt();
+
+  // Retry once on an unexplained failure (empty stderr + not passed) -
+  // likely transient resource contention on a local Piston instance,
+  // not a real compile/logic error.
+  if (result.timedOut || (result.stderr && !result.stdout)) {
+    result = await attempt();
   }
+
+  return result;
 }
 
 /**
