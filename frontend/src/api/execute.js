@@ -1,9 +1,9 @@
 import { request } from "./client.js";
 
-export async function executeCode(problemId, code) {
+export async function executeCode(problemId, code,language) {
   return request({
     url: "/execute",
     method: "POST",
-    data: { problemId, code },
+    data: { problemId, code,language },
   });
 }
