@@ -21,7 +21,7 @@ const executeCode = asyncHandler(async (req, res) => {
     verdict=`${results.length} testcase(s) attempted, failed on test ${results.length}`;
   }
   
-  return res.status(200).json(new ApiResponse(200,results,verdict));
+  return res.status(200).json(new ApiResponse(200, { allPassed, results }, verdict));
 
   
 });

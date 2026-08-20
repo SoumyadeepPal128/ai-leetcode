@@ -1,11 +1,19 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 import connectDB from "./db/index.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import executeRouter from "./routes/execute.routes.js";
 import generateRouter from "./routes/generate.routes.js";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // your Vite dev server
+    credentials: true, // allows cookies/auth headers later, once auth is wired in
+  })
+);
 
 app.use(express.json());
 
