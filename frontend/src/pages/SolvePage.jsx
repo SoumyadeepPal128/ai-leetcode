@@ -3,14 +3,21 @@ import { executeCode } from "../api/execute.js";
 import Problem from "../components/Problem.jsx";
 import Verdict from "../components/Verdict.jsx";
 import CodeEditor from "../components/CodeEditor.jsx";
+import LANGUAGES from "../constants/languages.js";
 
 function SolvePage({ problem }) {
-  const [code, setCode] = useState("");
+  const [language, setLanguage] = useState(LANGUAGES[0].id);
+  const [code, setCode] = useState(LANGUAGES[0].boilerplate);
   const [verdict, setVerdict] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState("problem"); // "problem" | "verdict"
-  const [language,setLanguage]=useState("cpp");
+  const [tab, setTab] = useState("problem");
+
+  function handleLanguageChange(newLangId) {
+    const lang = LANGUAGES.find((l) => l.id === newLangId);
+    setLanguage(newLangId);
+    setCode(lang.boilerplate);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -20,16 +27,18 @@ function SolvePage({ problem }) {
     setError(null);
 
     try {
-      const result = await executeCode(problem._id, code,language);
+      const result = await executeCode(problem._id, code, language);
       setVerdict(result);
-      setTab("verdict"); 
+      setTab("verdict");
     } catch (err) {
       setError(err.message);
-      setTab("verdict"); 
+      setTab("verdict");
     } finally {
       setLoading(false);
     }
   }
+
+  const currentLang = LANGUAGES.find((l) => l.id === language);
 
   return (
     <div className="flex h-screen bg-bg text-text">
@@ -61,8 +70,22 @@ function SolvePage({ problem }) {
 
       {/* Right panel */}
       <div className="w-1/2 flex flex-col">
+        <div className="flex items-center justify-between border-b border-muted px-4 py-2">
+          <select
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+            className="bg-black/40 text-text font-mono text-sm px-2 py-1 rounded outline-none border border-muted"
+          >
+            {LANGUAGES.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div className="flex-1 overflow-hidden">
-            <CodeEditor code={code} onChange={setCode} language={language} />
+          <CodeEditor code={code} onChange={setCode} language={currentLang.monacoLang} />
         </div>
 
         <div className="p-4 border-t border-muted">
