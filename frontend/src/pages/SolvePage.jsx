@@ -2,6 +2,7 @@ import { useState } from "react";
 import { executeCode } from "../api/execute.js";
 import Problem from "../components/Problem.jsx";
 import Verdict from "../components/Verdict.jsx";
+import CodeEditor from "../components/CodeEditor.jsx";
 
 function SolvePage({ problem }) {
   const [code, setCode] = useState("");
@@ -60,13 +61,9 @@ function SolvePage({ problem }) {
 
       {/* Right panel */}
       <div className="w-1/2 flex flex-col">
-        <textarea
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="flex-1 bg-black/40 text-text font-mono text-sm p-4 outline-none resize-none"
-          placeholder="// write your C++ solution here"
-          spellCheck={false}
-        />
+        <div className="flex-1 overflow-hidden">
+            <CodeEditor code={code} onChange={setCode} language={language} />
+        </div>
 
         <div className="p-4 border-t border-muted">
           <button

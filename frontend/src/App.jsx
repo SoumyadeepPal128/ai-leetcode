@@ -10,9 +10,7 @@ function App() {
       {!currentProblem ? (
         <GeneratePage onProblemGenerated={setCurrentProblem} />
       ) : (
-        <pre className="p-8 text-sm whitespace-pre-wrap">
-          <SolvePage problem={currentProblem}/>
-        </pre>
+        <SolvePage problem={currentProblem}/>
       )}
     </div>
   );
